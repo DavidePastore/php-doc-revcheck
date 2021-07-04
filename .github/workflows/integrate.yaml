@@ -11,15 +11,6 @@ on:
     - cron: '0 0 * * *'
 
 jobs:
-  create-dir:
-    name: "Create output directory"
-
-    runs-on: "ubuntu-latest"
-
-    steps:
-      - name: "Create output directory"
-        run: "mkdir output"
-
   rev-check:
     name: "Revcheck"
 
@@ -64,12 +55,21 @@ jobs:
           repository: "php/doc-en"
 
       - name: "Revcheck documentation for ${{ matrix.language }}"
-        run: "php doc-base/scripts/revcheck.php ${{ matrix.language }} > ./output/index-${{ matrix.language }}.html"
+        run: "php doc-base/scripts/revcheck.php ${{ matrix.language }} > ./index-${{ matrix.language }}.html"
+      
+      - name: "Upload artifact"
+        uses: 'actions/upload-artifact@v2'
+        with:
+            name: revcheck ${{ matrix.language }}
+            path: ./index-${{ matrix.language }}.html
   publish:
     name: "Publish on the gh-pages branch"
 
     runs-on: "ubuntu-latest"
+    needs: rev-check
     steps:
+      - name: Download all the artifacts
+        uses: actions/download-artifact@v2
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
