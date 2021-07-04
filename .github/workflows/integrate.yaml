@@ -16,6 +16,7 @@ jobs:
 
     runs-on: "ubuntu-latest"
 
+    # TODO Remove this one
     continue-on-error: true
 
     strategy:
@@ -71,6 +72,8 @@ jobs:
     steps:
       - name: Download all the artifacts
         uses: actions/download-artifact@v2
+        with:
+          path: ./output
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
