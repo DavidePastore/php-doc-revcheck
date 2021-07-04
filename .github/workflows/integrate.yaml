@@ -57,13 +57,13 @@ jobs:
           repository: "php/doc-en"
 
       - name: "Revcheck documentation for ${{ matrix.language }}"
-        run: "php base/scripts/revcheck.php ${{ matrix.language }} > ./index-${{ matrix.language }}.html"
+        run: "php base/scripts/revcheck.php ${{ matrix.language }} > ./index.html"
       
       - name: "Upload artifact"
         uses: 'actions/upload-artifact@v2'
         with:
-            name: revcheck ${{ matrix.language }}
-            path: ./index-${{ matrix.language }}.html
+            name: ${{ matrix.language }}
+            path: ./index.html
   publish:
     name: "Publish on the gh-pages branch"
 
