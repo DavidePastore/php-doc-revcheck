@@ -1,0 +1,74 @@
+name: "Integrate"
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  create-dir:
+    name: "Create output directory"
+
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - name: "Create output directory"
+        run: "mkdir output"
+
+  rev-check:
+    name: "Revcheck"
+
+    runs-on: "ubuntu-latest"
+
+    continue-on-error: true
+
+    strategy:
+      matrix:
+        language:
+          - "de"
+          - "en"
+          - "es"
+          - "fr"
+          - "it"
+          - "ja"
+#          - "pl"
+          - "pt_br"
+#          - "ro"
+          - "ru"
+          - "tr"
+#          - "uk"
+          - "zh"
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v2"
+        with:
+          path: "doc-base"
+
+      - name: "Checkout php/doc-${{ matrix.language }}"
+        uses: "actions/checkout@v2"
+        with:
+          path: "${{ matrix.language }}"
+          repository: "php/doc-${{ matrix.language }}"
+
+      - name: "Checkout php/doc-en as fallback"
+        if: "matrix.language != 'en'"
+        uses: "actions/checkout@v2"
+        with:
+          path: "en"
+          repository: "php/doc-en"
+
+      - name: "Revcheck documentation for ${{ matrix.language }}"
+        run: "php doc-base/scripts/revcheck.php ${{ matrix.language }} > ./output/index-${{ matrix.language }}.html"
+  publish:
+    steps:
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./output
