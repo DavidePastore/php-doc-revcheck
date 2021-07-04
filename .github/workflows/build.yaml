@@ -21,7 +21,7 @@ jobs:
     steps:
       - id: set-matrix
         # pl, ro, uk are missing
-        run: echo "::set-output name=matrix::[\"de\", \"es\", \"fr\", \"it\", \"ja\", \"pt_br\", \"ru\", \"tr\", \"zh\"]"
+        run: echo "::set-output name=matrix::$(cat data.json)"
 
   rev-check:
     name: "Revcheck"
@@ -31,7 +31,7 @@ jobs:
 
     strategy:
       matrix:
-        language: ${{fromJSON(needs.setmatrix.outputs.matrix)}}
+        language: ${{fromJSON(needs.setmatrix.outputs.matrix).languages}}
 
     steps:
       - name: "Checkout php/doc-base"
@@ -83,11 +83,10 @@ jobs:
           template: index.html.j2
           output_file: index.html
           strict: true
-          variables: |
-            languages=${{needs.setmatrix.outputs.matrix}}
+          data_file: data.json
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./
-          exclude_assets: '.github,README.md,index.html.j2'
+          exclude_assets: '.github,README.md,index.html.j2,data.json'
