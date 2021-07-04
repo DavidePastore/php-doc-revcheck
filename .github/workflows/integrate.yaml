@@ -66,6 +66,9 @@ jobs:
       - name: "Revcheck documentation for ${{ matrix.language }}"
         run: "php doc-base/scripts/revcheck.php ${{ matrix.language }} > ./output/index-${{ matrix.language }}.html"
   publish:
+    name: "Publish on the gh-pages branch"
+
+    runs-on: "ubuntu-latest"
     steps:
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
