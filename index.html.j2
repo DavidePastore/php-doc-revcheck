@@ -4,8 +4,11 @@
     <title>PHP Documentation - Revcheck</title>
   </head>
   <body>
-  {%- for language in languages %}
-    <a href="{{ language }}/index.html">{{ language }}</a>
-  {%- endfor %}
+      <h1>PHP Documentation - Revcheck</h1>
+      <ul>
+        {%- for language in languages %}
+            <li><a href="{{ language }}/index.html">{{ language }}</a></li>
+        {%- endfor %}
+      </ul>
   </body>
 </html>
