@@ -6,7 +6,7 @@
   <body>
       <h1>PHP Documentation - Revcheck</h1>
       <ul>
-        {%- for language in languages %}
+        {%- for language in languages|tojson %}
             <li><a href="{{ language }}/index.html">{{ language }}</a></li>
         {%- endfor %}
       </ul>
