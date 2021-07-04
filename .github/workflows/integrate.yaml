@@ -36,10 +36,11 @@ jobs:
           - "zh"
 
     steps:
-      - name: "Checkout"
+      - name: "Checkout php/doc-base"
         uses: "actions/checkout@v2"
         with:
-          path: "doc-base"
+          path: "base"
+          repository: "php/doc-base"
 
       - name: "Checkout php/doc-${{ matrix.language }}"
         uses: "actions/checkout@v2"
@@ -55,7 +56,7 @@ jobs:
           repository: "php/doc-en"
 
       - name: "Revcheck documentation for ${{ matrix.language }}"
-        run: "php doc-base/scripts/revcheck.php ${{ matrix.language }} > ./index-${{ matrix.language }}.html"
+        run: "php base/scripts/revcheck.php ${{ matrix.language }} > ./index-${{ matrix.language }}.html"
       
       - name: "Upload artifact"
         uses: 'actions/upload-artifact@v2'
